@@ -167,3 +167,100 @@ These are only attempted after every required feature works.
 Users with naviagte through the application by clicking buttons. Important information will stand out by being bigger on the screen, such as timer stats, or having an accent color like the health bars. Haven't thought too much about color schemes yet. The page will be responsive to different users with the background just being cut and the menus adjusting to the new screen sizes. Users will know if an action succeeded or failed based on whether the page changes or shows an error message, for example the button is disabled in a private match with message need 2 players to start a match. If an oppenent disconnects that will be displayed as part of the win logic results screen.
 
 # Part 4
+## Technical Plan
+**React + TypeScript** will be used to write the pages, components and types for the application, such as the type meteor size, or difficulty
+
+**Tailwind CSS** will be used as an easier way to style components instead of using basic CSS. It will be used on the menus and game screen to make them responsive so that they can respond well to different screen sizes
+
+**React Router** will be used to navigate and conditionally render different pages without having to reload the whole component/browser. An example would be when a user logins to the app, or when a win condition is met. It will also be used to check and make sure that the user is authenticated before being able to view the profile page. For the game page and game results page you need to be one of the users in the game
+
+**TanStack Query** will be used to query the database when displaying leaderboard stats and profile match history, it will also be used to update display name and avatars 
+
+**State Management** I will be using useState to keep track of the user input in the game as well as if a meteor is active or destroyed. I will use a SocketContext to hold the information and functions that need to be called in the socket.
+
+**Forms** and validation will be used on the room codes, display name editor, and login credentials if I create my own authentication system
+
+**Authentication** Will be handled through Google and a custom system built and later implemented if I have extra time.
+
+**Backend + Persistence** will be handled using Node.js and Postgres to send and receive data through TanStack. Stored data goes over REST requests using TanStack and the live game data goes over WebSockets
+
+**WebSockets** Will be used to sync the data between users, such as time, score, and health. WebSockets will also be used for room codes, and friend invites. WebSockets will also handle the win logic and issue the result screen to show up on both client devices
+
+## Data Planning
+**Players**: This will be a table with an id, username, display name, avatar icon, and google id
+
+**Matches**: This will have a match id, difficulty level, foreign key to player1, and a foreign key to player2, guest_name for if there is a guest, winner id, end reason, started at, ended at, and is private
+
+**Stats**: This will have a id, and a fk to player id, a fk to match id, as well as meteors destroyed for each size, score, final health, typing errors, and meteors hit base
+
+**Friends**: This will have an id, a fk to issuer, and a fk to addressed to, along with a status that can be invited, accepted, or declined
+
+Players have many matches, a match has 2 stats, and a friend row links 2 players
+
+## Backend and Authentication
+**What data your frontend will request or send?**
+### REST
+- player username
+- player login token
+- player avatar icon
+- player display name
+- friend status
+- friend issuer and addressed to
+- player stats
+- match result, win/loss
+
+### WebSocket
+- room codes
+- quick play queue
+- player login token
+- lobby states
+- meteor details
+- health
+- timer
+- rematch requests
+
+**What information needs to be saved permanently?**
+- player username
+- player google id
+- player avatar icon
+- player display name
+- friend status
+- friend issuer and addressed to
+- player stats
+- match result, win/loss
+
+
+**What functionality requires authentication?**
+- Profile data
+- Saving stats
+- Friends list
+- Appearing on leaderboards
+
+**How will the frontend communicate with the backend?**  
+Stored data goes over REST using TanStack Query and the live game data goes over WebSockets 
+
+# Part 5
+## Development Order
+- Game page
+- WebSocket Server
+- Private match
+- Database
+- API
+- Google login
+- Leaderboard
+- Home page
+- Profile page
+- Friends
+- Custom Authentication
+
+First program checkin is on Nov 30th which is just in a week. I want to have an initial instance of the game, even if it is just single player, it would be great if I could also have the WebSocket Server started on, but because it is Thanksgiving week I'm not sure on how much I will actually get done, but it's not like we have a lot of time to work on the final
+
+## Anticipated Challenges
+**Keeping both instances in sync**
+
+**making meteors falling smooth**
+
+**determining which meteor the user is trying to type at**
+
+## Priorities
+I will prioritize my remaining work by what are the actual requirements of the assignment and what can I get done in the remaining amount of time. I will use AI to help me throughout so that I can make sure that I am hitting all of the required requirements for this assignment.
