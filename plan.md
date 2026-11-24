@@ -74,7 +74,7 @@ These are only attempted after every required feature works.
   5. User B gets a friend request and has to accept
 
 **Result**: User A and User B are now friends and can be seen by each other in the friends list
-**Potential Problems**: The request pipeline, this would be a function on the websocket where when User A clicks add friend it sends a message to User B client for the request, when User B clicks accept it sends messages to both clients updating their Friends list.
+**Potential Problems**: The request pipeline, this would be a function on the websocket where when User A clicks add friend it sends a message to User B client for the request, when User B clicks accept it sends messages to both clients updating their Friends list. Both user friends list should update at the same time and they should be able to see each other listed in the friends list. Before User B accepts the friend request, User A should see User B listed under friends list with some kind of tag that a request has been sent
 
 **Goal**: User A can join User B's private match  
 **Steps**:  
@@ -89,7 +89,7 @@ These are only attempted after every required feature works.
   9. User B clicks Start Match
 
 **Result**: The countdown starts for both users at the same time, and the match begins on the difficulty User B chose
-**Potential Problems**: Generating random room codes and making sure that room code doesn't already exist. This could be solved by storing the room codes in some kind of hash set or dictionary so you can easily see if it already exists. The Start Match button stays disabled while User B is the only player in the lobby, so a match can't be started without an opponent.
+**Potential Problems**: Generating random room codes and making sure that room code doesn't already exist. This could be solved by storing the room codes in some kind of hash set or dictionary so you can easily see if it already exists. The Start Match button stays disabled while User B is the only player in the lobby, so a match can't be started without an opponent. There will be a message displayed on the screen saying that 2 players are needed to start a match
 
 ## Acceptance Tests
 - When User A sends an invite to User B, User B can see a friend request
@@ -97,7 +97,7 @@ These are only attempted after every required feature works.
 - When User A disconnects from game, win condition shows User B as the winner
 - When User B's health goes to 0, win condition shows User A as the winner
 - When a word on a meteor is correctly typed, that meteor no longer appears on screen
-- When an meteor hits the players baseline, that players health is decreased
+- When a meteor hits the player's baseline, that player's health is decreased
 - When a logged-in player wins a match, their win count is increased by 1
 - When the timer runs out, the player with the higher score is shown as the winner, even if they have less health
 - User A can join User B's private match via a room code (possibly a friend invite if that gets built)
@@ -113,7 +113,7 @@ These are only attempted after every required feature works.
 
 **Game**
 - Purpose: This is where the actual gameplay happens
-- Displays: This shows the meteors with the words you need to type to destroy them, it has an input box, your health and score and your opponents health and score across the top along with the time remaining. There is a baseline near the bottom of the screen, with your profile icon in the middle
+- Displays: This shows the meteors with the words you need to type to destroy them, it has an input box, your health and score and your opponent's health and score across the top along with the time remaining. There is a baseline near the bottom of the screen, with your profile icon in the middle
 - Actions: Users can type words into the input box to match the words that appear on the meteors, once typed correctly the meteor disappears. 
 - Navigation: Clicking quickplay and waiting for a match, or clicking start from a private match, the only way to leave is by closing the app or finishing the game
 
@@ -127,13 +127,13 @@ These are only attempted after every required feature works.
 - Purpose: Shows the leaderboard for each difficulty and what stat you want to filter by
 - Displays: names of avatars and ranking for the given difficulty and stat selected
 - Actions: Tabbed menu at the top to filter by difficulty with a filter on the leaderboard for most wins, highest score, accuracy, or most meteors destroyed, also an exit/back to menu button
-- Navigation: YOu get to it by clicking on the leaderboard button on the main page, you can leave it by clicking the back button
+- Navigation: You get to it by clicking on the leaderboard button on the main page, you can leave it by clicking the back button
 
 **Profile**
 - Purpose: See your stats and edit your avatar
 - Displays: Your game stats, display name, avatar icon, and recent matches with your score and whether you won
 - Actions: Change avatar icon, change display name, back to main menu
-- Navigation: You get to it by clicking the profile icon in the top right of the home page, you can get our of it by clicking the back button
+- Navigation: You get to it by clicking the profile icon in the top right of the home page, you can get out of it by clicking the back button
 
 **Login**
 - Purpose: Allows users to log in
@@ -155,16 +155,16 @@ These are only attempted after every required feature works.
 - Responsibility: Displays an image of a meteor styled appropriately based on the size that is passed into it, along with a word relative to the size of the meteor
 
 **StatsCard**
-- Responsibility: A sylized way to display the different stats of a match
+- Responsibility: A stylized way to display the different stats of a match
 
-**HeathBar**
+**HealthBar**
 - Responsibility: Displays the amount of health that a player has left
 
 **QueueBanner**
 - Responsibility: A visual indicator to the User that they are currently in the queue to join a match
 
 ## Interface Planning
-Users with naviagte through the application by clicking buttons. Important information will stand out by being bigger on the screen, such as timer stats, or having an accent color like the health bars. Haven't thought too much about color schemes yet. The page will be responsive to different users with the background just being cut and the menus adjusting to the new screen sizes. Users will know if an action succeeded or failed based on whether the page changes or shows an error message, for example the button is disabled in a private match with message need 2 players to start a match. If an oppenent disconnects that will be displayed as part of the win logic results screen.
+Users will navigate through the application by clicking buttons. Important information will stand out by being bigger on the screen, such as timer stats, or having an accent color like the health bars. Haven't thought too much about color schemes yet. The page will be responsive to different users with the background just being cut and the menus adjusting to the new screen sizes. Users will know if an action succeeded or failed based on whether the page changes or shows an error message, for example the button is disabled in a private match with message need 2 players to start a match. If an opponent disconnects that will be displayed as part of the win logic results screen.
 
 # Part 4
 ## Technical Plan
@@ -172,15 +172,15 @@ Users with naviagte through the application by clicking buttons. Important infor
 
 **Tailwind CSS** will be used as an easier way to style components instead of using basic CSS. It will be used on the menus and game screen to make them responsive so that they can respond well to different screen sizes
 
-**React Router** will be used to navigate and conditionally render different pages without having to reload the whole component/browser. An example would be when a user logins to the app, or when a win condition is met. It will also be used to check and make sure that the user is authenticated before being able to view the profile page. For the game page and game results page you need to be one of the users in the game
+**React Router** will be used to navigate and conditionally render different pages without having to reload the whole component/browser. An example would be when a user logs in to the app, or when a win condition is met. It will also be used to check and make sure that the user is authenticated before being able to view the profile page. For the game page and game results page you need to be one of the users in the game
 
 **TanStack Query** will be used to query the database when displaying leaderboard stats and profile match history, it will also be used to update display name and avatars 
 
-**State Management** I will be using useState to keep track of the user input in the game as well as if a meteor is active or destroyed. I will use a SocketContext to hold the information and functions that need to be called in the socket.
+**State Management** I will be using useState to keep track of the user input in the game as well as if a meteor is active or destroyed. I will use a SocketContext to hold the information and functions that need to be called in the socket. I will also need a QueueBannerContext so that the user can freely move to other pages while waiting in the queue but still having the queue banner displayed on every screen. I will also need an AuthContext that handles login, logout and is used to see if a user can access a specific page.
 
 **Forms** and validation will be used on the room codes, display name editor, and login credentials if I create my own authentication system
 
-**Authentication** Will be handled through Google and a custom system built and later implemented if I have extra time.
+**Authentication** Will be handled through Google and a custom system built and later implemented if I have extra time. Google will pass a token to the backend and then the backend will generate its own session token and use that
 
 **Backend + Persistence** will be handled using Node.js and Postgres to send and receive data through TanStack. Stored data goes over REST requests using TanStack and the live game data goes over WebSockets
 
@@ -191,7 +191,7 @@ Users with naviagte through the application by clicking buttons. Important infor
 
 **Matches**: This will have a match id, difficulty level, foreign key to player1, and a foreign key to player2, guest_name for if there is a guest, winner id, end reason, started at, ended at, and is private
 
-**Stats**: This will have a id, and a fk to player id, a fk to match id, as well as meteors destroyed for each size, score, final health, typing errors, and meteors hit base
+**Stats**: This will have an id, and a fk to player id, a fk to match id, as well as meteors destroyed for each size, score, final health, typing errors, and meteors hit base
 
 **Friends**: This will have an id, a fk to issuer, and a fk to addressed to, along with a status that can be invited, accepted, or declined
 
@@ -242,13 +242,13 @@ Stored data goes over REST using TanStack Query and the live game data goes over
 # Part 5
 ## Development Order
 - Game page
+- Home page
 - WebSocket Server
 - Private match
 - Database
 - API
 - Google login
 - Leaderboard
-- Home page
 - Profile page
 - Friends
 - Custom Authentication
@@ -257,10 +257,19 @@ First program checkin is on Nov 30th which is just in a week. I want to have an 
 
 ## Anticipated Challenges
 **Keeping both instances in sync**
+- Why do I expect it to be difficult? I know how WebSockets work, but I haven't had a lot of practice with them yet and this has multiple things that it needs to keep in sync not just a message like what we did on the message board app in class.
+- How do I plan to approach it? I want to start off by looking over the WebSocket code that we did in class again and then ask AI to help me but still having me doing the coding. 
+- How will I determine whether my solution works? I will run a manual test on two instances of the game and see how in sync they are. I could also probably mock it and run some automated tests.
 
-**making meteors falling smooth**
+**Making meteors fall smoothly**
+- Why do I expect it to be difficult? I haven't done any animation stuff before on frontend besides vibe coding with Claude. 
+- How do I plan to approach it? I will use AI to look over my class notes and class projects to see if there is anything that we have learned previously that I can use to help me with these animations. Then, I will do some research and have AI help me learn how to do it.
+- How will I determine whether my solution works? I will do some manual testing again, probably on multiple devices and will do some user tests and get feedback from other users as well. 
 
-**determining which meteor the user is trying to type at**
+**Determining which meteor the user is trying to type**
+- Why do I expect it to be difficult? I am thinking of other typing games I have played but the ones I have played have a sequence to the words, so unless I force the user to type the meteor that is closest to their baseline I don't have previous experience to draw upon for this
+- How do I plan to approach it? I want to use AI to come up with some different solutions to this problem and then play test it and determine what feels the most natural.
+- How will I determine whether my solution works? This comes back to me play testing and I will also get other users to test it and give me feedback as well.
 
 ## Priorities
-I will prioritize my remaining work by what are the actual requirements of the assignment and what can I get done in the remaining amount of time. I will use AI to help me throughout so that I can make sure that I am hitting all of the required requirements for this assignment.
+I will prioritize my remaining work by what are the actual requirements of the assignment and what can I get done in the remaining amount of time. I will use AI to help me throughout so that I can make sure that I am hitting all of the required requirements for this assignment. If I fall behind I will drop friends and custom authentication
